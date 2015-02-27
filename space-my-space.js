@@ -33,29 +33,35 @@ SpaceMySpace.generate.space = function (element, options) {
 
 SpaceMySpace.generate.stars = function (element, options) {
 	function drawStarsCollection() {
-
-
 		for ( i = 0; i < 5; i++ ) {
 			SpaceMySpace.storage.stars.push(SpaceMySpace.generate.stars.createStars());
 		}
 	}
 
 	if (SpaceMySpace.storage.stars.length < 1) {
-		console.log('it is');
 		drawStarsCollection();
 		if ( !$('html5-skyPainter-wrapper-stars').length ) {
-			//$('body > :first-child > :first-child').wrap('<div class="html5-skyPainter-wrapper-stars" style="width: 100%; height: 100%;"></div>');
 			$(element).append('<div class="html5-skyPainter-wrapper-stars"></div');
 			$('.html5-skyPainter-wrapper-stars').css('position', 'absolute');
 			$('.html5-skyPainter-wrapper-stars').css('height', '100%');
 			$('.html5-skyPainter-wrapper-stars').css('width', '100%');
 			$('.html5-skyPainter-wrapper-stars').css('top', '0');
 			$('.html5-skyPainter-wrapper-stars').css('z-index', '1');
-			//var random = Math.floor( Math.random() * collection.length );
 			document.getElementsByClassName('html5-skyPainter-wrapper-stars')[0].style.background = SpaceMySpace.storage.stars[0];
 		}
 	}
 };
+
+SpaceMySpace.generate.stars.twinkle = function() {
+	$('.html5-skyPainter-wrapper-stars').fadeOut(3500, function() {
+		var random = Math.floor( Math.random() * SpaceMySpace.storage.stars.length );
+		$(this).css('background', '');
+		$(this).css('background', SpaceMySpace.storage.stars[random]);
+		$(this).fadeIn(3500, function () {
+			setTimeout(SpaceMySpace.generate.stars.twinkle(), 8000);
+		});
+	});
+}
 
 SpaceMySpace.generate.stars.createStars = function() {
 	function randomIncrement() { return Math.floor( Math.random() * starDensity ) }
