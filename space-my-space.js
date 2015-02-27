@@ -19,10 +19,12 @@ SpaceMySpace.draw = function (element, options) {
 };
 
 SpaceMySpace.generate = function (element, item, options) {
+	var self = this;
 	var generate = {
-		'space': this.generate.space(element, options[item]),
-		'stars': this.generate.stars(element, options[item])
+		'space': function() { return self.generate.space(element, options[item]) },
+		'stars': function() { return self.generate.stars(element, options[item]) }
 	}
+	generate[item]();
 };
 
 SpaceMySpace.generate.space = function (element, options) {
@@ -41,7 +43,7 @@ SpaceMySpace.generate.stars = function (element, options) {
 	if (SpaceMySpace.storage.stars.length < 1) {
 		drawStarsCollection();
 		if ( !$('html5-skyPainter-wrapper-stars').length ) {
-			$(element).append('<div class="html5-skyPainter-wrapper-stars"></div');
+			$(element).append('<div class="html5-skyPainter-wrapper-stars"></div>');
 			$('.html5-skyPainter-wrapper-stars').css('position', 'absolute');
 			$('.html5-skyPainter-wrapper-stars').css('height', '100%');
 			$('.html5-skyPainter-wrapper-stars').css('width', '100%');
@@ -50,18 +52,20 @@ SpaceMySpace.generate.stars = function (element, options) {
 			document.getElementsByClassName('html5-skyPainter-wrapper-stars')[0].style.background = SpaceMySpace.storage.stars[0];
 		}
 	}
+
+	setTimeout(this.stars.twinkle, 4000);
+	setInterval(this.stars.twinkle, 10000);
+
+
 };
 
 SpaceMySpace.generate.stars.twinkle = function() {
-	$('.html5-skyPainter-wrapper-stars').fadeOut(3500, function() {
-		var random = Math.floor( Math.random() * SpaceMySpace.storage.stars.length );
-		$(this).css('background', '');
-		$(this).css('background', SpaceMySpace.storage.stars[random]);
-		$(this).fadeIn(3500, function () {
-			setTimeout(SpaceMySpace.generate.stars.twinkle(), 8000);
-		});
-	});
-}
+	$('.html5-skyPainter-wrapper-stars').toggleClass('html5-skyPainter-wrapper-stars-hidden');
+	$('.html5-skyPainter-wrapper-stars').css('background', SpaceMySpace.storage.stars[Math.floor( Math.random() * SpaceMySpace.storage.stars.length )]);
+	setTimeout( function() {
+		$('.html5-skyPainter-wrapper-stars').toggleClass('html5-skyPainter-wrapper-stars-hidden');
+	}, 2000);
+};
 
 SpaceMySpace.generate.stars.createStars = function() {
 	function randomIncrement() { return Math.floor( Math.random() * starDensity ) }
@@ -80,7 +84,8 @@ SpaceMySpace.generate.stars.createStars = function() {
 	for ( x = 0; x < canvas.width; x += randomIncrement() ) {
 		for ( y = 0; y < canvas.height; y += randomIncrement() ) {
 			ctx.fillStyle = 'rgba(255, 255, 255, ' + Math.random() + ')';
-			ctx.fillRect(x, y, randomSize(), randomSize());
+			var randomStarSize = randomSize();
+			ctx.fillRect(x, y, randomStarSize, randomStarSize);
 		}
 	}
 

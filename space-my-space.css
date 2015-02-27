@@ -1,0 +1,18 @@
+.html5-skyPainter-wrapper-stars {
+    opacity: 1;
+    -moz-opacity: 1;
+    filter:alpha(opacity=100);
+
+    -moz-transition: all 3s ease-out;
+    -o-transition: all 3s ease-out;
+    -webkit-transition: all 3s ease-out;
+    transition: all 3s ease-out;
+
+}
+
+.html5-skyPainter-wrapper-stars-hidden {
+    opacity: 0;
+    -moz-opacity: 0;
+    filter:alpha(opacity=0);
+  
+}
